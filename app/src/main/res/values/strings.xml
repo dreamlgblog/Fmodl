@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Fmodl</string>
+    <string name="tip">请先录音，然后才能转换格式：</string>
+    <string name="tip_1">点击开始录音</string>
+    <string name="tip_2">点击结束录音</string>
+</resources>
