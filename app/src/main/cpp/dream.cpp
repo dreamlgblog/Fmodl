@@ -87,7 +87,6 @@ JNIEXPORT void JNICALL
         try {
             System_Create(&system);//初始化
             system->init(100, FMOD_INIT_NORMAL, NULL);
-
             system->createSound(path_cstr,FMOD_INIT_NORMAL,NULL,&sound);
 
             switch (type){

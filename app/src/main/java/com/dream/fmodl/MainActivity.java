@@ -2,14 +2,23 @@ package com.dream.fmodl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.fmod.FMOD;
@@ -19,6 +28,9 @@ public class MainActivity extends Activity {
 
     public  String path;
     public Button button;
+    private ArrayList<HashMap<String, String>> scanAllAudioFiles = new ArrayList<HashMap<String,String>>();
+    public ListView listView;
+    private MyAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +51,42 @@ public class MainActivity extends Activity {
                 }
             }
         });
+
+        listView = (ListView) findViewById(R.id.list);
+
+
+
+        getMusicList();
     }
+
+    public void getMusicList(){
+        myAdapter = new MyAdapter();
+        listView.setAdapter(myAdapter);
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                scanAllAudioFiles.clear();
+                scanAllAudioFiles.addAll( Utils.scanAllAudioFiles(getApplicationContext()));
+                System.out.println("----------------------"+scanAllAudioFiles.get(1).get("musicTitle"));
+                myAdapter.notifyDataSetChanged();
+            }
+        }).start();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO Auto-generated method stub
+                System.out.println("------------------------"+scanAllAudioFiles.get(position).get("musicFileUrl"));
+                path = scanAllAudioFiles.get(position).get("musicFileUrl");
+            }
+        });
+
+
+    }
+
 
     public void mFix(View  btn){
                 switch (btn.getId()) {
@@ -72,6 +119,8 @@ public class MainActivity extends Activity {
                 }
 
     }
+
+
 
     public void playSound(final int mode){
         if(!new File(path).exists()){
@@ -125,5 +174,45 @@ public class MainActivity extends Activity {
 
         }
     }
+    class MyAdapter extends BaseAdapter {
 
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return scanAllAudioFiles.size();
+        }
+
+        @Override
+        public HashMap<String, String> getItem(int position) {
+            // TODO Auto-generated method stub
+            return scanAllAudioFiles.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            // TODO Auto-generated method stub
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            ViewHolder holder = null;
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.item, null);
+                holder = new ViewHolder();
+                holder.textView = (TextView)convertView.findViewById(R.id.item);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder)convertView.getTag();
+            }
+            holder.textView.setText("歌曲名："+scanAllAudioFiles.get(position).get("musicTitle")+"--歌手"+scanAllAudioFiles.get(position).get("music_author"));
+            return convertView;
+        }
+
+
+        public  class ViewHolder {
+            public TextView textView;
+        }
+    }
 }

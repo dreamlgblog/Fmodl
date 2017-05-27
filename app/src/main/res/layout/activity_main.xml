@@ -15,10 +15,18 @@
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/rec_but"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tip_1"/>
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="110dp"/>
     </RelativeLayout>
 
 
@@ -47,7 +55,8 @@
                     android:id="@+id/btn_normal"
                     style="@style/AudioImgStyle"
                     android:src="@drawable/record"
-                    android:onClick="mFix"/>
+                    android:onClick="mFix"
+                    android:layout_height="52dp" />
 
                 <TextView
                     style="@style/AudioTextStyle"
@@ -55,6 +64,7 @@
             </LinearLayout>
 
             <LinearLayout
+
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -63,7 +73,8 @@
                     android:id="@+id/btn_luoli"
                     style="@style/AudioImgStyle"
                     android:src="@drawable/luoli"
-                    android:onClick="mFix" />
+                    android:onClick="mFix"
+                    android:layout_height="52dp" />
                 <TextView
                     style="@style/AudioTextStyle"
                     android:text="萝莉"/>
@@ -80,7 +91,8 @@
                     android:id="@+id/btn_dashu"
                     style="@style/AudioImgStyle"
                     android:src="@drawable/dashu"
-                    android:onClick="mFix"/>
+                    android:onClick="mFix"
+                    android:layout_height="52dp" />
 
                 <TextView
                     style="@style/AudioTextStyle"
@@ -103,7 +115,9 @@
                     android:id="@+id/btn_jingsong"
                     style="@style/AudioImgStyle"
                     android:src="@drawable/jingsong"
-                    android:onClick="mFix"/>
+                    android:onClick="mFix"
+                    android:layout_height="52dp"
+                    android:layout_width="match_parent" />
                 <TextView
                     style="@style/AudioTextStyle"
                     android:text="惊悚"/>
@@ -118,7 +132,9 @@
                     android:id="@+id/btn_gaoguai"
                     style="@style/AudioImgStyle"
                     android:src="@drawable/gaoguai"
-                    android:onClick="mFix"/>
+                    android:onClick="mFix"
+                    android:layout_height="52dp"
+                    android:layout_width="match_parent" />
                 <TextView
                     style="@style/AudioTextStyle"
                     android:text="搞怪"/>
@@ -134,7 +150,8 @@
                     android:id="@+id/btn_kongling"
                     style="@style/AudioImgStyle"
                     android:src="@drawable/kongling"
-                    android:onClick="mFix"/>
+                    android:onClick="mFix"
+                    android:layout_height="52dp" />
 
                 <TextView
                     style="@style/AudioTextStyle"
