@@ -76,19 +76,31 @@ JNIEXPORT void JNICALL
     }
     JNIEXPORT void JNICALL Java_com_dream_fmodl_FmodUtils_fix(JNIEnv *env, jclass type_, jstring path_,jint type) {
         System *system;
-        Sound *sound;
+        Sound *sound, *sound_to_play;
         Channel *channel;
         DSP *dsp;
         bool playing = true;
         float frequency = 0;
+        unsigned int      version;
+        void             *extradriverdata = 0;
+        int               numsubsounds;
 
         const char* path_cstr = env->GetStringUTFChars(path_,NULL);
         LOGI("%s",path_cstr);
         try {
             System_Create(&system);//初始化
             system->init(100, FMOD_INIT_NORMAL, NULL);
-            system->createSound(path_cstr,FMOD_INIT_NORMAL,NULL,&sound);
-
+            //system->createSound(path_cstr,FMOD_INIT_NORMAL,NULL,&sound);
+            system->createStream(path_cstr,FMOD_LOOP_NORMAL | FMOD_2D, 0, &sound);
+            sound->getNumSubSounds(&numsubsounds);
+            if (numsubsounds)
+            {
+                sound->getSubSound(0, &sound_to_play);
+            }
+            else
+            {
+                sound_to_play = sound;
+            }
             switch (type){
                 case MODE_NORMAL:
                     system->playSound(sound,0,false,&channel);
@@ -102,7 +114,7 @@ JNIEXPORT void JNICALL
                     //设置音调的参数
                     dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH,2.5);
 
-                    system->playSound(sound, 0, false, &channel);
+                    system->playSound(sound_to_play, 0, false, &channel);
                     //添加到channel
                     channel->addDSP(0,dsp);
                     LOGI("%s","fix luoli");
@@ -112,7 +124,7 @@ JNIEXPORT void JNICALL
                     //惊悚
                     system->createDSPByType(FMOD_DSP_TYPE_TREMOLO,&dsp);
                     dsp->setParameterFloat(FMOD_DSP_TREMOLO_SKEW, 0.5);
-                    system->playSound(sound, 0, false, &channel);
+                    system->playSound(sound_to_play, 0, false, &channel);
                     channel->addDSP(0,dsp);
 
                     break;
@@ -121,7 +133,7 @@ JNIEXPORT void JNICALL
                     system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT,&dsp);
                     dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH,0.8);
 
-                    system->playSound(sound, 0, false, &channel);
+                    system->playSound(sound_to_play, 0, false, &channel);
                     //添加到channel
                     channel->addDSP(0,dsp);
                     LOGI("%s","fix dashu");
@@ -129,7 +141,7 @@ JNIEXPORT void JNICALL
                 case MODE_GAOGUAI:
                     //搞怪
                     //提高说话的速度
-                    system->playSound(sound, 0, false, &channel);
+                    system->playSound(sound_to_play, 0, false, &channel);
                     channel->getFrequency(&frequency);
                     frequency = frequency * 1.6;
                     channel->setFrequency(frequency);
@@ -140,7 +152,7 @@ JNIEXPORT void JNICALL
                     system->createDSPByType(FMOD_DSP_TYPE_ECHO,&dsp);
                     dsp->setParameterFloat(FMOD_DSP_ECHO_DELAY,300);
                     dsp->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK,20);
-                    system->playSound(sound, 0, false, &channel);
+                    system->playSound(sound_to_play, 0, false, &channel);
                     channel->addDSP(0,dsp);
                     LOGI("%s","fix kongling");
                     break;
@@ -167,7 +179,5 @@ JNIEXPORT void JNICALL
         sound->release();
         system->close();
         system->release();
-
-
     }
 }
